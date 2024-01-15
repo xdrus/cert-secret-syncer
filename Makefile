@@ -5,7 +5,7 @@ SHELL := /bin/sh
 NAME := jx
 BINARY_NAME := cert-secret-syncer
 BUILD_TARGET = build
-MAIN_SRC_FILE=cmd/main.go
+MAIN_SRC_FILE=cmd/*
 GO := GO111MODULE=on go
 GO_NOMOD :=GO111MODULE=off go
 REV := $(shell git rev-parse --short HEAD 2> /dev/null || echo 'unknown')
