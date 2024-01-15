@@ -29,8 +29,13 @@ spec:
             requests:
               cpu: 400m
               memory: 600Mi
-        - name: build-make-build
+        - image: golang:1.21
+          name: build-make-linux
           resources: {}
+          script: |
+            #!/bin/bash
+            source .jx/variables.sh
+            make linux
         - name: check-registry
           resources: {}
         - name: build-container-build
