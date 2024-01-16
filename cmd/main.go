@@ -7,7 +7,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/acm"
 	"jkassis.com/cert-secret-syncer/util"
@@ -37,10 +36,7 @@ var awsAcmSvc *acm.ACM
 
 func init() {
 	// Create ACM service client
-	awsSession = session.Must(session.NewSessionWithOptions(session.Options{
-		Config:            aws.Config{Region: aws.String("us-west-2")},
-		SharedConfigState: session.SharedConfigEnable,
-	}))
+	awsSession = session.Must(session.NewSession())
 	awsAcmSvc = acm.New(awsSession)
 }
 
