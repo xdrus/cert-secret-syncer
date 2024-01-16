@@ -31,17 +31,15 @@ type SecretSyncer struct {
 	client.Client
 }
 
-var awsSession *session.Session
 var awsAcmSvc *acm.ACM
 
 func init() {
 	// Create ACM service client
-	awsSession = session.Must(session.NewSession())
-	awsAcmSvc = acm.New(awsSession)
+	awsAcmSvc = acm.New(session.Must(session.NewSession()))
 }
 
 func (r *SecretSyncer) Reconcile(ctx context.Context, req ctrl.Request) (result ctrl.Result, err error) {
-	log := log.FromContext(ctx)
+	logger := log.FromContext(ctx)
 
 	// Get the secret
 	secret := &corev1.Secret{}
@@ -57,7 +55,7 @@ func (r *SecretSyncer) Reconcile(ctx context.Context, req ctrl.Request) (result 
 
 	switch backend {
 	case "ACM":
-		log.Info("reconciling secret with AWS Certificate Manager backend")
+		logger.Info("reconciling secret with AWS Certificate Manager backend")
 
 		// Read certificate and key
 		var certs [][]byte
@@ -83,7 +81,7 @@ func (r *SecretSyncer) Reconcile(ctx context.Context, req ctrl.Request) (result 
 
 		// Import certificate to ACM
 		{
-			log.Info("importing cert to ACM")
+			logger.Info("importing cert to ACM")
 
 			importCertInput := &acm.ImportCertificateInput{
 				Certificate: certs[0],
@@ -155,7 +153,7 @@ func (r *SecretSyncer) ingressesGetByLabels(ctx context.Context, labelSet map[st
 }
 
 func (r *SecretSyncer) labelStringParse(labelString string) (map[string]string, error) {
-	labels := map[string]string{}
+	labelMap := map[string]string{}
 
 	pairs := strings.Split(labelString, ",")
 	for _, pair := range pairs {
@@ -171,10 +169,10 @@ func (r *SecretSyncer) labelStringParse(labelString string) (map[string]string, 
 			return nil, fmt.Errorf("invalid label spec: %q", pair)
 		}
 
-		labels[key] = value
+		labelMap[key] = value
 	}
 
-	return labels, nil
+	return labelMap, nil
 
 }
 
