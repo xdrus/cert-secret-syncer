@@ -1,4 +1,3 @@
-FROM scratch
-EXPOSE 8080
+FROM gcr.io/distroless/static:nonroot
 ENTRYPOINT ["/cert-secret-syncer"]
 COPY ./build/linux/ /
