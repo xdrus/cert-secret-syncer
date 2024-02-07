@@ -59,16 +59,17 @@ serviceAccount:
   name: ""
 ```
 
-At that point, you are probably ready to apply the helm chart. Try that using the `make.sh` file...
+At that point, you are probably ready to apply the helm chart. First add the repo
 
 ```
-./make.sh install
+helm repo add jxgh https://jenkins-x-charts.github.io/repo
 ```
 
-and of course, if you need to make changes, try...
+Then you can install or upgrade using:
 
 ```
-./make.sh upgrade
+helm repo update
+helm upgrade [RELEASE_NAME] jxgh/cert-secret-syncer --install
 ```
 
 When you are ready, create a `Certificate` and `Ingress` like this...
