@@ -38,8 +38,6 @@ spec:
             make linux arm64
         - name: check-registry
           resources: {}
-        - name: build-container-build
-          resources: {}
         - image: gcr.io/kaniko-project/executor:v1.9.1-debug
           name: build-container-build
           resources: {}
