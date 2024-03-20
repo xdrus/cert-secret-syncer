@@ -35,10 +35,26 @@ spec:
           script: |
             #!/bin/bash
             source .jx/variables.sh
-            make linux
+            make linux arm64
         - name: check-registry
           resources: {}
         - name: build-container-build
+          resources: {}
+        - image: gcr.io/kaniko-project/executor:v1.9.1-debug
+          name: build-container-build
+          resources: {}
+          script: |
+            #!/busybox/sh
+            source .jx/variables.sh
+            cp /tekton/creds/.docker/config.json /kaniko/.docker/config.json
+            /kaniko/executor $KANIKO_FLAGS --context=/workspace/source --dockerfile=Dockerfile --destination=$PUSH_CONTAINER_REGISTRY/$DOCKER_REGISTRY_ORG/$APP_NAME:$VERSION-amd64
+            /kaniko/executor $KANIKO_FLAGS --context=/workspace/source --dockerfile=Dockerfile-arm --destination=$PUSH_CONTAINER_REGISTRY/$DOCKER_REGISTRY_ORG/$APP_NAME:$VERSION-arm64
+        - name: push-multi-arch-manifest
+          image: mplatform/manifest-tool:alpine-v2.1.6
+          script: |
+            #!/bin/sh -xe
+            source .jx/variables.sh
+            manifest-tool push from-args --platforms linux/amd64,linux/arm64 --template $PUSH_CONTAINER_REGISTRY/$DOCKER_REGISTRY_ORG/$APP_NAME:$VERSION-ARCH --target $PUSH_CONTAINER_REGISTRY/$DOCKER_REGISTRY_ORG/$APP_NAME:$VERSION || sleep 900
           resources: {}
         - name: promote-changelog
           resources: {}
