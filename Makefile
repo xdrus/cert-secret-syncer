@@ -117,7 +117,7 @@ linux: ## Build for amd64 Linux
 	chmod +x build/linux/$(BINARY_NAME)
 
 arm64: ## Build for ARM64 linux
-	CGO_ENABLED=$(CGO_ENABLED) GOOS=linux GOARCH=arm64 $(GO) $(BUILD_TARGET) $(BUILDFLAGS) -o build/arm/$(BINARY_NAME) $(MAIN_SRC_FILE)
+	CGO_ENABLED=$(CGO_ENABLED) GOOS=linux GOARCH=arm64 $(GO) $(BUILD_TARGET) $(BUILDFLAGS) -o build/arm64/$(BINARY_NAME) $(MAIN_SRC_FILE)
 	chmod +x build/arm64/$(BINARY_NAME)
 
 arm: ## Build for ARM linux
