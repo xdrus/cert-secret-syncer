@@ -11,10 +11,12 @@ spec:
       {{- include "..selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.metrics.port | default 8080 }}"
+        {{- if .Values.podAnnotations }}
+        {{- toYaml .Values.podAnnotations | nindent 8 }}
+        {{- end }}
       labels:
         {{- include "..selectorLabels" . | nindent 8 }}
     spec:
